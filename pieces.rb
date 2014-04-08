@@ -82,7 +82,7 @@ end
 
 class Bishop < SlidingPieces
   def initialize(color, pos, board)
-    @display_char = color == :white ? "\u2657" : "\u265D"
+    @display_char = "\u265D"
     @move_dirs = DIAGONALS
     super(color, pos, board)
   end
@@ -90,7 +90,7 @@ end
 
 class Rook < SlidingPieces
   def initialize(color, pos, board)
-    @display_char = color == :white ? "\u2656" : "\u265C"
+    @display_char = "\u265C"
     @move_dirs = FILES
     super(color, pos, board)
   end
@@ -98,7 +98,7 @@ end
 
 class Queen < SlidingPieces
   def initialize(color, pos, board)
-    @display_char = color == :white ? "\u2655" : "\u265B"
+    @display_char = "\u265B"
     @move_dirs = DIAGONALS + FILES
     super(color, pos, board)
   end
@@ -106,7 +106,7 @@ end
 
 class Knight < SteppingPieces
   def initialize(color, pos, board)
-    @display_char = color == :white ? "\u2658" : "\u265E"
+    @display_char = "\u265E"
     @move_dirs = KNIGHT_MOVES
     super(color, pos, board)
   end
@@ -114,7 +114,7 @@ end
 
 class King < SteppingPieces
   def initialize(color, pos, board)
-    @display_char = color == :white ? "\u2654" : "\u265A"
+    @display_char = "\u265A"
     @move_dirs = KING_MOVES
     super(color, pos, board)
   end
@@ -123,7 +123,7 @@ end
 class Pawn < Piece
   attr_reader :display_char
   def initialize(color, pos, board)
-    @display_char = color == :white ? "\u2659" : "\u265F"
+    @display_char = "\u265F"
     super(color, pos, board)
     @move_dirs = nil
   end

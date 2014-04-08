@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'colorize'
 require './pieces.rb'
 
 class Board
@@ -25,7 +26,7 @@ class Board
                     }
     pieces.each do |piece_type, piece_poses|
       piece_poses.each do |piece_pos|
-        color = piece_pos == 1 ? :white : :black
+        color = piece_pos[0] == 0 ? :white : :black
         case piece_type
         when :knight
           @game_space[piece_pos[0]][piece_pos[1]] = Knight.new(color, piece_pos, self)
@@ -43,13 +44,14 @@ class Board
   end
 
   def display
-    @game_space.each do |row|
-      row.each do |piece|
-        if piece.nil?
-          print '  '
-        else
-          print piece.display_char + ' '
+    @game_space.each_with_index do |row, i|
+      row.each_with_index do |piece, j|
 
+        color = (i + j).even? ? :magenta : :cyan
+        if piece.nil?
+          print '  '.colorize(:background => color)
+        else
+          print "#{piece.display_char.colorize(piece.color)} ".colorize(:background => color)
         end
       end
 
