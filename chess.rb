@@ -4,6 +4,10 @@ class Piece
   attr_accessor :move_dirs, :pos, :color
   DIAGONALS = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
   FILES = [[1, 0], [-1, 0], [0, -1], [0, 1]]
+  KING_MOVES = DIAGONALS + FILES
+  KNIGHT_MOVES = [[-1, 2], [-1, -2], [1, 2], [1, -2], [-2, -1], [-2, 1],
+                  [2, -1], [2, 1]]
+
   def initialize(color, pos, board)
     @color = color
     @pos = pos
@@ -33,8 +37,6 @@ class SlidingPieces < Piece
 
     valid_moves = []
 
-    # p pos
-
     move_dirs.each do |delta|
       new_x = pos[0] + delta[0]
       new_y = pos[1] + delta[1]
@@ -57,6 +59,26 @@ class SlidingPieces < Piece
 end
 
 class SteppingPieces < Piece
+  def moves(move_dirs, pos)
+    valid_moves = []
+
+    move_dirs.each do |delta|
+      new_x = pos[0] + delta[0]
+      new_y = pos[1] + delta[1]
+
+      next unless (new_x.between?(0, 7) && new_y.between?(0, 7))
+
+      if board_space_empty?([new_x, new_y]) || opponent_piece?([new_x, new_y])
+        valid_moves += [[new_x, new_y]]
+      end
+      #
+      # if opponent_piece?([new_x, new_y])
+      #   valid_moves += [[new_x, new_y]]
+      # end
+    end
+
+    valid_moves.uniq
+  end
 end
 
 class Bishop < SlidingPieces
@@ -64,11 +86,6 @@ class Bishop < SlidingPieces
     @move_dirs = DIAGONALS
     super(color, pos, board)
   end
-
-  # def moves(move_dir, pos)
-  #   # TDOD CHANGE OTHER CLASSES TO THIS
-  #   super(move_dir, pos)
-  # end
 end
 
 class Rook < SlidingPieces
@@ -86,9 +103,17 @@ class Queen < SlidingPieces
 end
 
 class Knight < SteppingPieces
+  def initialize(color, pos, board)
+    @move_dirs = KNIGHT_MOVES
+    super(color, pos, board)
+  end
 end
 
 class King < SteppingPieces
+  def initialize(color, pos, board)
+    @move_dirs = KING_MOVES
+    super(color, pos, board)
+  end
 end
 
 class Pawn < Piece
@@ -107,10 +132,18 @@ if __FILE__ == $PROGRAM_NAME
   # bish = Bishop.new(:black, [4, 4], b)
   # b.game_space[4][4] = bish
   # p bish.moves(bish.move_dirs, bish.pos)
-  puts "Rook"
-  rook = Rook.new(:black, [4, 4], b)
-  b.game_space[4][4] = rook
-  p rook.moves(rook.move_dirs, rook.pos)
+  # puts "Rook"
+  # rook = Rook.new(:black, [4, 4], b)
+  # b.game_space[4][4] = rook
+  # p rook.moves(rook.move_dirs, rook.pos)
+  puts "KING"
+  king = King.new(:black, [4, 4], b)
+  b.game_space[4][4] = king
+  p king.moves(king.move_dirs, king.pos)
+  puts "Knight"
+  knight = Knight.new(:black, [4, 4], b)
+  b.game_space[4][4] = knight
+  p knight.moves(knight.move_dirs, knight.pos)
 
 end
 
