@@ -1,6 +1,8 @@
+#!/usr/bin/env ruby
+
 class Piece
-  attr_accessor :move_dir, :pos, :color
-  DIAGONALS = [[1, 1], [-1, 1], [-1, -1], [-1, -1]]
+  attr_accessor :move_dirs, :pos, :color
+  DIAGONALS = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
   FILES = [[1, 0], [-1, 0], [0, -1], [0, 1]]
   def initialize(color, pos, board)
     @color = color
@@ -50,7 +52,7 @@ class SlidingPieces < Piece
       end
     end
 
-    valid_moves
+    valid_moves.uniq
   end
 end
 
@@ -59,26 +61,26 @@ end
 
 class Bishop < SlidingPieces
   def initialize(color, pos, board)
-    @move_dir = DIAGONALS
+    @move_dirs = DIAGONALS
     super(color, pos, board)
   end
 
-  def moves(move_dir, pos)
-    # TDOD CHANGE OTHER CLASSES TO THIS
-    super(move_dir, pos)
-  end
+  # def moves(move_dir, pos)
+  #   # TDOD CHANGE OTHER CLASSES TO THIS
+  #   super(move_dir, pos)
+  # end
 end
 
 class Rook < SlidingPieces
   def initialize(color, pos, board)
-    @move_dir = FILES
+    @move_dirs = FILES
     super(color, pos, board)
   end
 end
 
 class Queen < SlidingPieces
   def initialize(color, pos, board)
-    @move_dir = DIAGONALS + FILES
+    @move_dirs = DIAGONALS + FILES
     super(color, pos, board)
   end
 end
@@ -98,6 +100,18 @@ class Board
   def initialize
     @game_space = Array.new(8) { Array.new(8) { nil } }
   end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  b = Board.new
+  # bish = Bishop.new(:black, [4, 4], b)
+  # b.game_space[4][4] = bish
+  # p bish.moves(bish.move_dirs, bish.pos)
+  puts "Rook"
+  rook = Rook.new(:black, [4, 4], b)
+  b.game_space[4][4] = rook
+  p rook.moves(rook.move_dirs, rook.pos)
+
 end
 
 #b = Bishop.new(:black, [0,0], Board.new)
