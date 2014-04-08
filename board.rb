@@ -61,6 +61,16 @@ class Board
     nil
   end
 
+  def in_check?(king_object)
+    @game_space.flatten.each do |piece|
+      next if piece.nil?
+      next if king_object.color == piece.color
+      return true if piece.moves(piece.move_dirs, piece.pos).any? { |move| king_object.pos == move }
+    end
+
+    false
+  end
+
 end
 
 if __FILE__ == $PROGRAM_NAME
@@ -85,4 +95,6 @@ if __FILE__ == $PROGRAM_NAME
  #  b.game_space[1][4] = piece
  #  p piece.moves(piece.move_dirs, piece.pos)
  b.display
+ b.game_space[6][4] = Rook.new(:white, [6,4], b)
+ p b.in_check?(b.game_space[7][4])
 end

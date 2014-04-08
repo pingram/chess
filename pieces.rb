@@ -28,6 +28,8 @@ class Piece
     @board.game_space[x][y].color != self.color
   end
 
+
+
 end
 
 class SlidingPieces < Piece
@@ -70,10 +72,6 @@ class SteppingPieces < Piece
       if board_space_empty?([new_x, new_y]) || opponent_piece?([new_x, new_y])
         valid_moves += [[new_x, new_y]]
       end
-      #
-      # if opponent_piece?([new_x, new_y])
-      #   valid_moves += [[new_x, new_y]]
-      # end
     end
 
     valid_moves.uniq
@@ -141,10 +139,10 @@ class Pawn < Piece
 
     return [] unless ((new_x).between?(0, 7) && y.between?(0, 7))
 
-    valid_moves << [new_x, y]
+    valid_moves << [new_x, y] unless opponent_piece?([new_x, y])
 
     unless has_moved?
-      valid_moves << [x + (delta * 2), y]
+      valid_moves << [x + (delta * 2), y] unless opponent_piece?([x + (delta * 2), y])
     end
 
 
