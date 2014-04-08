@@ -117,6 +117,51 @@ class King < SteppingPieces
 end
 
 class Pawn < Piece
+  def initialize(color, pos, board)
+    super(color, pos, board)
+    @move_dirs = nil
+  end
+
+  def moves(move_dirs, pos)
+    x, y = self.pos
+    valid_moves = []
+    if @color == :black
+      delta = - 1
+    else
+      delta = 1
+    end
+
+    new_x = x + delta
+
+    return [] unless ((new_x).between?(0, 7) && y.between?(0, 7))
+
+    valid_moves << [new_x, y]
+
+    unless has_moved?
+      valid_moves << [x + (delta * 2), y]
+    end
+
+
+    if (y + 1).between?(0,7) && opponent_piece?([new_x, y + 1])
+      valid_moves << [new_x, y + 1]
+    end
+    if (y - 1).between?(0,7) && opponent_piece?([new_x, y - 1])
+      valid_moves << [new_x, y - 1]
+    end
+
+    valid_moves
+  end
+
+  def has_moved?
+    if @color == :black && @pos[0] == 6
+      return false
+    elsif @color == :white && @pos[0] == 1
+      return false
+    end
+
+    true
+  end
+
 end
 
 class Board
@@ -136,14 +181,19 @@ if __FILE__ == $PROGRAM_NAME
   # rook = Rook.new(:black, [4, 4], b)
   # b.game_space[4][4] = rook
   # p rook.moves(rook.move_dirs, rook.pos)
-  puts "KING"
-  king = King.new(:black, [4, 4], b)
-  b.game_space[4][4] = king
-  p king.moves(king.move_dirs, king.pos)
-  puts "Knight"
-  knight = Knight.new(:black, [4, 4], b)
-  b.game_space[4][4] = knight
-  p knight.moves(knight.move_dirs, knight.pos)
+  # puts "KING"
+  # king = King.new(:black, [4, 4], b)
+  # b.game_space[4][4] = king
+  # p king.moves(king.move_dirs, king.pos)
+  # puts "Knight"
+  # knight = Knight.new(:black, [5, 5], b)
+ #  b.game_space[5][5] = knight
+ #  #p knight.moves(knight.move_dirs, knight.pos)
+ #  puts "Pawn"
+ #  piece = Pawn.new(:white, [1, 4], b)
+ #  b.game_space[1][4] = piece
+ #  p piece.moves(piece.move_dirs, piece.pos)
+
 
 end
 
