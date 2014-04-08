@@ -71,7 +71,33 @@ class Board
     false
   end
 
+
+  def board_dup
+    new_board = Board.new
+    new_board.game_space = self.game_space.deep_dup
+    new_board
+  end
+
+
 end
+
+
+class Array
+  def deep_dup
+    self.map do |element|
+      if element.is_a?(Array)
+        element.deep_dup
+      elsif !element.nil?
+        element.dup
+      else
+        nil
+      end
+    end
+  end
+end
+
+
+
 
 if __FILE__ == $PROGRAM_NAME
   b = Board.new
@@ -94,7 +120,7 @@ if __FILE__ == $PROGRAM_NAME
  #  piece = Pawn.new(:white, [1, 4], b)
  #  b.game_space[1][4] = piece
  #  p piece.moves(piece.move_dirs, piece.pos)
- b.display
- b.game_space[6][4] = Rook.new(:white, [6,4], b)
- p b.in_check?(b.game_space[7][4])
+ # b.display
+  # b.game_space[6][4] = Rook.new(:white, [6,4], b)
+  # p b.in_check?(b.game_space[7][4])
 end
