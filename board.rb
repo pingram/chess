@@ -62,8 +62,9 @@ class Board
     nil
   end
 
-  def in_check?(king_object)
-    @game_space.flatten.each do |piece|
+  def in_check?(king_object, game_space)
+    # debugger
+    game_space.flatten.each do |piece|
       next if piece.nil?
       next if king_object.color == piece.color
       return true if piece.moves(piece.move_dirs, piece.pos).any? { |move| king_object.pos == move }
@@ -87,41 +88,65 @@ class Board
       p = piece.pos.dup
       b = piece.board
 
-      case piece.class
-      when Pawn.class
-        new_piece = Pawn.new(c, p, b)
-      when Knight.class
-        new_piece = Knight.new(c, p, b)
-      when Queen.class
-        new_piece = Queen.new(c, p, b)
-      when King.class
-        new_piece = King.new(c, p, b)
-      when Rook.class
-        new_piece = Rook.new(c, p, b)
-      when Bishop.class
-        new_piece = Bishop.new(c, p, b)
-      end
+      new_piece = 0
 
+      new_piece = piece.class.new(c, p, b)
       new_board.game_space[new_piece.pos[0]][new_piece.pos[1]] = new_piece
       new_piece.board = new_board
     end
 
     new_board
   end
+
+  def move(start_pos, end_pos)
+
+    new_board = self.board_dup
+    x1, y1 = start_pos
+    x2, y2 = end_pos
+
+    player_color = new_board.game_space[x1][y1].color
+    p player_color
+    #p new_board.game_space[4][4].class
+    #+p new_board.game_space[5][5].class
+    new_board.game_space[x2][y2] = new_board.game_space[x1][y1]
+    new_board.game_space[x1][y1] = nil
+
+
+
+    king = new_board.game_space.flatten.select { |piece|
+      piece.class == King && piece.color == player_color }.first
+
+
+    new_board.game_space[x2][y2].pos = [x2, y2]
+    # p king
+
+    p king.pos
+
+    if in_check?(king, new_board.game_space)
+      raise 'This should put the players king in check'
+    end
+
+    self.game_space[x2][y2] = self.game_space[x1][y1]
+    self.game_space[x1][y1] = nil
+  end
 end
 
 if __FILE__ == $PROGRAM_NAME
   b = Board.new
+  b.empty_board!
   # bish = Bishop.new(:black, [4, 4], b)
   # b.game_space[4][4] = bish
   # p bish.moves(bish.move_dirs, bish.pos)
-  # puts "Rook"
-  # rook = Rook.new(:black, [4, 4], b)
-  # b.game_space[4][4] = rook
+  #puts "Rook"
+  rook = Rook.new(:white, [5, 5], b)
+  b.game_space[5][5] = rook
   # p rook.moves(rook.move_dirs, rook.pos)
-  # puts "KING"
-  # king = King.new(:black, [4, 4], b)
-  # b.game_space[4][4] = king
+  #puts "KING"
+  rook = Rook.new(:black, [5, 6], b)
+  b.game_space[5][6] = rook
+
+  king = King.new(:black, [5, 7], b)
+  b.game_space[5][7] = king
   # p king.moves(king.move_dirs, king.pos)
   # puts "Knight"
   # knight = Knight.new(:black, [5, 5], b)
@@ -134,8 +159,14 @@ if __FILE__ == $PROGRAM_NAME
  # b.display
   # b.game_space[6][4] = Rook.new(:white, [6,4], b)
   # p b.in_check?(b.game_space[7][4])
+
   c = b.board_dup
-  p c.game_space[0][0].pos.object_id
-  p b.game_space[0][0].pos.object_id
+  # p b.game_space[4][4].class
+  # p b.game_space[5][5].class
+  # p c.game_space[4][4].class
+  # p c.game_space[5][5].class
+  b.move([5,6],[1,6])
+
+
 
 end
