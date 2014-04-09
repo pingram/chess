@@ -25,15 +25,23 @@ class Board
     nil
   end
 
-  def in_check?(king_object, game_space)
+  def in_check?(color, game_space)
+    king = get_king(color, game_space)
+
     game_space.flatten.compact.each do |piece|
-      next if king_object.color == piece.color
+      next if king.color == piece.color
       return true if piece.moves(piece.move_dirs, piece.pos).any? do |move|
-        king_object.pos == move
+        king.pos == move
       end
     end
 
     false
+  end
+
+  def get_king(color, game_space)
+    king = game_space.flatten.select do |piece|
+      piece.class == King && piece.color == color
+    end.first
   end
 
   def empty_board!
@@ -66,13 +74,9 @@ class Board
         new_board.game_space[x2][y2] = new_board.game_space[x1][y1]
         new_board.game_space[x1][y1] = nil
 
-        king = new_board.game_space.flatten.select do |piece|
-          piece.class == King && piece.color == player_color
-        end.first
-
         new_board.game_space[x2][y2].pos = [x2, y2]
 
-        unless in_check?(king, new_board.game_space)
+        unless in_check?(player_color, new_board.game_space)
           valid_moves << [piece.pos, piece_move]
         end
       end
@@ -82,17 +86,11 @@ class Board
   end
 
   def checkmate?(player_color)
-    king = @game_space.flatten.select { |piece|
-      piece.class == King && piece.color == player_color }.first
-
-    valid_moves(player_color).empty? && in_check?(king, @game_space)
+    valid_moves(player_color).empty? && in_check?(player_color, @game_space)
   end
 
   def stalemate?(player_color)
-    king = @game_space.flatten.select { |piece|
-      piece.class == King && piece.color == player_color }.first
-
-    valid_moves(player_color).empty? && !in_check?(king, @game_space)
+    valid_moves(player_color).empty? && !in_check?(player_color, @game_space)
   end
 
   def move(move_arr, player_color)

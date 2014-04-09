@@ -34,7 +34,10 @@ class Game
       @board.display
 
       begin
-        puts "\n\nIt is #{player.color}'s turn: ".colorize(:magenta)
+        puts "\n\nIt is #{player.color}'s turn.".colorize(:magenta)
+        if @board.in_check?(player.color, @board.game_space)
+          puts "You are in Check.".colorize(:red)
+        end
         new_move = player.get_move
         piece = @board.move(new_move, player.color)
         if piece.promoted?
