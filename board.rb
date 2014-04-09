@@ -1,7 +1,4 @@
-#!/usr/bin/env ruby
-
 require 'colorize'
-require 'debugger'
 require './pieces.rb'
 
 class Board
@@ -48,7 +45,7 @@ class Board
     @game_space.each_with_index do |row, i|
       row.each_with_index do |piece, j|
 
-        color = (i + j).even? ? :light_white : :yellow
+        color = (i + j).even? ? :cyan : :yellow
         if piece.nil?
           print '  '.colorize(:background => color)
         else
@@ -143,66 +140,24 @@ class Board
     valid_moves(player_color).empty? && !in_check?(king, @game_space)
   end
 
-  # def move(start_pos, end_pos) # TODO
-#
-#     new_board = self.board_dup
-#     x1, y1 = start_pos
-#     x2, y2 = end_pos
-#
-#     # player_color = new_board.game_space[x1][y1].color
-#
-#     new_board.game_space[x2][y2] = new_board.game_space[x1][y1]
-#     new_board.game_space[x1][y1] = nil
-#
-#
-#
-#     king = new_board.game_space.flatten.select { |piece|
-#       piece.class == King && piece.color == player_color }.first
-#
-#
-#     new_board.game_space[x2][y2].pos = [x2, y2]
-#
-#
-#     if in_check?(king, new_board.game_space)
-#       raise 'This should put the players king in check'
-#     end
-#
-#     self.game_space[x2][y2] = self.game_space[x1][y1]
-#     self.game_space[x1][y1] = nil
-#   end
+  def move(move_arr, player_color) # TODO
+
+
+    if valid_moves(player_color).include?(move_arr)
+
+
+      x1, y1 = move_arr[0]
+      x2, y2 = move_arr[1]
+
+      self.game_space[x2][y2] = self.game_space[x1][y1]
+      self.game_space[x1][y1] = nil
+
+      self.game_space[x2][y2].pos = [x2, y2]
+    else
+      raise InvalidMoveError.new('Invalid move')
+    end
+  end
 end
 
-if __FILE__ == $PROGRAM_NAME
-  b = Board.new
-  b.display
-  # b.empty_board!
-  # bish = Bishop.new(:black, [4, 4], b)
-  # b.game_space[4][4] = bish
-  # p bish.moves(bish.move_dirs, bish.pos)
-  #puts "Rook"
-  # rook = Rook.new(:white, [5, 5], b)
-  # b.game_space[5][5] = rook
-  # # p rook.moves(rook.move_dirs, rook.pos)
-  # #puts "KING"
-  # rook = Rook.new(:black, [5, 6], b)
-  # b.game_space[5][6] = rook
-  #
-  # king = King.new(:black, [5, 7], b)
-  # b.game_space[5][7] = king
-  # p king.moves(king.move_dirs, king.pos)
-  # puts "Knight"
-  # knight = Knight.new(:black, [5, 5], b)
- #  b.game_space[5][5] = knight
- #  #p knight.moves(knight.move_dirs, knight.pos)
- #  puts "Pawn"
- #  piece = Pawn.new(:white, [1, 4], b)
- #  b.game_space[1][4] = piece
- #  p piece.moves(piece.move_dirs, piece.pos)
- # b.display
-  # b.game_space[6][4] = Rook.new(:white, [6,4], b)
-  # p b.in_check?(b.game_space[7][4])
-  p b.valid_moves(:black)
-
-
-
+class InvalidMoveError < RuntimeError
 end
