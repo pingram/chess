@@ -5,7 +5,7 @@ class HumanPlayer
   end
 
   def get_move
-    puts "Please enter your move:\n".colorize(:magenta)
+    puts "Please enter your move:\n".colorize(:cyan)
     user_input = gets.chomp.downcase
 
     if user_input.length != 5

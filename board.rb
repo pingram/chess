@@ -8,6 +8,7 @@ class Board
 
   def display
     @game_space.reverse.each_with_index do |row, i|
+      print (8 - i).to_s.colorize(:yellow)
       row.each_with_index do |piece, j|
         color = (i + j).even? ? :cyan : :magenta
         if piece.nil?
@@ -19,6 +20,7 @@ class Board
 
       puts "\n"
     end
+    print '0 A B C D E F G H'.colorize(:yellow)
 
     nil
   end

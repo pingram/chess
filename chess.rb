@@ -19,7 +19,7 @@ class Game
     puts "\nWelcome to Chess - Enterprise Edition\u2122!! (with raving)".colorize(:magenta)
     puts "Press enter to rave on!!\n".colorize(:cyan)
     @board.display
-    print "\n"
+    print "\n\n"
     gets
     player = @b_player
     loop do
@@ -28,18 +28,18 @@ class Game
       break if over?(player.color)
 
       system "clear"
-      print "\nChess - Enterprise Edition\u2122".colorize(:cyan)
+      print "\nChess - Enterprise Edition\u2122".colorize(:magenta)
       print "\nBrought to you by mdevolld and pingram\n\n".colorize(:cyan)
 
       @board.display
 
       begin
-        puts "\nIt is #{player.color}'s turn: ".colorize(:magenta)
+        puts "\n\nIt is #{player.color}'s turn: ".colorize(:magenta)
         new_move = player.get_move
         @board.move(new_move, player.color)
       rescue ArgumentError => e
         print "\n"
-        puts e.to_s.colorize(:red)
+        puts e.to_s.red.on_black.blink
         retry
       end
     end
