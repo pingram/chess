@@ -19,14 +19,14 @@ class HumanPlayer
     from = move[0].reverse
     to = move[1].reverse
 
-    player_map = { 'a' => 7,
-                   'b' => 6,
-                   'c' => 5,
-                   'd' => 4,
-                   'e' => 3,
-                   'f' => 2,
-                   'g' => 1,
-                   'h' => 0 }
+    player_map = { 'a' => 0,
+                   'b' => 1,
+                   'c' => 2,
+                   'd' => 3,
+                   'e' => 4,
+                   'f' => 5,
+                   'g' => 6,
+                   'h' => 7 }
 
     from_x, from_y = from.split('')
     to_x, to_y = to.split('')

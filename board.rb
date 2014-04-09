@@ -19,8 +19,8 @@ class Board
     pieces = { :knight => [[0, 1], [0, 6], [7, 1], [7, 6]],
                       :rook => [[0, 0],[0, 7], [7, 0],[7, 7]],
                       :bishop => [[0, 2], [0, 5], [7, 2], [7, 5]],
-                      :queen => [[0, 4], [7, 4]],
-                      :king => [[0, 3], [7, 3]]
+                      :queen => [[0, 3], [7, 3]],
+                      :king => [[0, 4], [7, 4]]
                     }
     pieces.each do |piece_type, piece_poses|
       piece_poses.each do |piece_pos|
@@ -43,7 +43,7 @@ class Board
 
   def display
     @game_space.reverse.each_with_index do |row, i|
-      row.reverse.each_with_index do |piece, j|
+      row.each_with_index do |piece, j|
 
         color = (i + j).even? ? :yellow : :cyan
         if piece.nil?
@@ -88,6 +88,9 @@ class Board
 
       new_piece = piece.class.new(c, p, b)
       new_board.game_space[new_piece.pos[0]][new_piece.pos[1]] = new_piece
+
+
+
       new_piece.board = new_board
     end
 
@@ -158,17 +161,17 @@ class Board
     end
   end
 
-  def place_piece(piece)
+  def place_piece(board, piece)
     # self.game_space[piece.pos] = nil
     # piece.pos = pos
-    self.game_space[piece.pos[0]][piece.pos[1]] = piece
+    board.game_space[piece.pos[0]][piece.pos[1]] = piece
   end
 
   #assume move is valid / already checked
-  def move_piece(piece, new_pos)
-    self.game_space[piece.pos[0]][piece.pos[1]] = nil
+  def move_piece(board, piece, new_pos)
+    board.game_space[piece.pos[0]][piece.pos[1]] = nil
     piece.pos = new_pos
-    self.game_space[piece.pos[0]][piece.pos[1]] = piece
+    board.game_space[piece.pos[0]][piece.pos[1]] = piece
   end
 
 end
