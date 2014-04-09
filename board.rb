@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'colorize'
+require 'debugger'
 require './pieces.rb'
 
 class Board
@@ -71,33 +72,43 @@ class Board
     false
   end
 
+  def empty_board!
+    @game_space = Array.new(8) { Array.new(8) { nil } }
+  end
 
   def board_dup
     new_board = Board.new
-    new_board.game_space = self.game_space.deep_dup
+    new_board.empty_board!
+
+    @game_space.flatten.each do |piece|
+      next if piece.nil?
+
+      c = piece.color
+      p = piece.pos.dup
+      b = piece.board
+
+      case piece.class
+      when Pawn.class
+        new_piece = Pawn.new(c, p, b)
+      when Knight.class
+        new_piece = Knight.new(c, p, b)
+      when Queen.class
+        new_piece = Queen.new(c, p, b)
+      when King.class
+        new_piece = King.new(c, p, b)
+      when Rook.class
+        new_piece = Rook.new(c, p, b)
+      when Bishop.class
+        new_piece = Bishop.new(c, p, b)
+      end
+
+      new_board.game_space[new_piece.pos[0]][new_piece.pos[1]] = new_piece
+      new_piece.board = new_board
+    end
+
     new_board
   end
-
-
 end
-
-
-class Array
-  def deep_dup
-    self.map do |element|
-      if element.is_a?(Array)
-        element.deep_dup
-      elsif !element.nil?
-        element.dup
-      else
-        nil
-      end
-    end
-  end
-end
-
-
-
 
 if __FILE__ == $PROGRAM_NAME
   b = Board.new
@@ -123,4 +134,8 @@ if __FILE__ == $PROGRAM_NAME
  # b.display
   # b.game_space[6][4] = Rook.new(:white, [6,4], b)
   # p b.in_check?(b.game_space[7][4])
+  c = b.board_dup
+  p c.game_space[0][0].pos.object_id
+  p b.game_space[0][0].pos.object_id
+
 end

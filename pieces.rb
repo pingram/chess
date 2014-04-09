@@ -1,5 +1,5 @@
 class Piece
-  attr_accessor :move_dirs, :pos, :color
+  attr_accessor :move_dirs, :pos, :color, :board
   attr_reader :display_char
   DIAGONALS = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
   FILES = [[1, 0], [-1, 0], [0, -1], [0, 1]]
