@@ -1,5 +1,5 @@
 class Piece
-  attr_accessor :move_dirs, :pos, :color, :board
+  attr_accessor :move_dirs, :pos, :color, :board, :promote
   attr_reader :display_char
   DIAGONALS = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
   FILES = [[1, 0], [-1, 0], [0, -1], [0, 1]]
@@ -11,6 +11,7 @@ class Piece
     @color = color
     @pos = pos
     @board = board
+    @promoted = false
   end
 
   def moves
@@ -28,8 +29,9 @@ class Piece
     @board.game_space[x][y].color != self.color
   end
 
-
-
+  def promoted?
+    @promote
+  end
 end
 
 class SlidingPieces < Piece

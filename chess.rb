@@ -36,7 +36,11 @@ class Game
       begin
         puts "\n\nIt is #{player.color}'s turn: ".colorize(:magenta)
         new_move = player.get_move
-        @board.move(new_move, player.color)
+        piece = @board.move(new_move, player.color)
+        if piece.promoted?
+          new_piece_desired = player.promote
+          @board.promote_piece(piece, new_piece_desired)
+        end
       rescue ArgumentError => e
         print "\n"
         puts e.to_s.red.on_black.blink
@@ -61,5 +65,15 @@ class Game
 end
 
 if __FILE__ == $PROGRAM_NAME
-  Game.new.play
+  a = Game.new
+  a.board.empty_board!
+  a.board.place_piece(a.board, King.new(:white, [5,5], a.board))
+  a.board.place_piece(a.board, King.new(:black, [4,3], a.board))
+  a.board.place_piece(a.board, Pawn.new(:white, [6,6], a.board))
+  a.play
+
+
+
+
+
 end

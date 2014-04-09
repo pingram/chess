@@ -100,14 +100,26 @@ class Board
       x1, y1 = move_arr[0]
       x2, y2 = move_arr[1]
 
+
       self.game_space[x2][y2] = self.game_space[x1][y1]
       self.game_space[x1][y1] = nil
 
       self.game_space[x2][y2].pos = [x2, y2]
 
+      piece = self.game_space[x2][y2]
+
+      if piece.class == Pawn
+        if piece.color == :black && piece.pos[0] == 0
+          piece.promote = true
+        elsif piece.color == :white && piece.pos[0] == 7
+          piece.promote = true
+        end
+      end
     else
       raise ArgumentError.new('Invalid move')
     end
+
+    piece
   end
 
   # Regardless of what's there put the piece on the board overwriting the current piece
@@ -120,6 +132,17 @@ class Board
     board.game_space[piece.pos[0]][piece.pos[1]] = nil
     piece.pos = new_pos
     board.game_space[piece.pos[0]][piece.pos[1]] = piece
+  end
+
+  def promote_piece(piece, new_piece_desired)
+    c, p, b = piece.color, piece.pos.dup, piece.board
+    character_map = { 'r' => Rook.new(c, p, b),
+                      'b' => Bishop.new(c, p, b),
+                      'q' => Queen.new(c, p, b),
+                      'n' => Knight.new(c, p, b)
+                    }
+
+    @game_space[p[0]][p[1]] = character_map[new_piece_desired]
   end
 
   private
