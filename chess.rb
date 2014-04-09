@@ -16,7 +16,11 @@ class Game
 
   def play
     system "clear"
-    puts "\n\nWelcome to Chess - Enterprise Edition!! (with raving)".colorize(:magenta)
+    puts "\nWelcome to Chess - Enterprise Edition\u2122!! (with raving)".colorize(:magenta)
+    puts "Press enter to rave on!!\n".colorize(:cyan)
+    @board.display
+    print "\n"
+    gets
     player = @b_player
     loop do
       player = @w_player == player ? @b_player : @w_player
@@ -24,10 +28,13 @@ class Game
       break if over?(player.color)
 
       system "clear"
+      print "\nChess - Enterprise Edition\u2122".colorize(:cyan)
+      print "\nBrought to you by mdevolld and pingram\n\n".colorize(:cyan)
+
       @board.display
 
       begin
-        puts "It is #{player.color}'s turn: ".colorize(:magenta)
+        puts "\nIt is #{player.color}'s turn: ".colorize(:magenta)
         new_move = player.get_move
         @board.move(new_move, player.color)
       rescue ArgumentError => e

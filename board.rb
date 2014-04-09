@@ -9,7 +9,7 @@ class Board
   def display
     @game_space.reverse.each_with_index do |row, i|
       row.each_with_index do |piece, j|
-        color = (i + j).even? ? :yellow : :cyan
+        color = (i + j).even? ? :cyan : :magenta
         if piece.nil?
           print '  '.colorize(:background => color)
         else
