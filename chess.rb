@@ -54,13 +54,18 @@ class Game
 
 end
 
+# YELLOW IS WHITE!!!
 
-# g = Game.new
+g = Game.new
+g.board.display
 # g.board.empty_board!
 # g.board.place_piece(King.new(:black, [0,0], g.board))
 # g.board.place_piece(King.new(:white, [4,4], g.board))
 # g.board.place_piece(Queen.new(:white, [1,2], g.board))
-# g.play
+# g.board.move_piece(g.board.game_space[0][0], [5,5])
+# g.board.display
+
+g.play
 
 
 

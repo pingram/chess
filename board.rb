@@ -42,10 +42,10 @@ class Board
   end
 
   def display
-    @game_space.each_with_index do |row, i|
-      row.each_with_index do |piece, j|
+    @game_space.reverse.each_with_index do |row, i|
+      row.reverse.each_with_index do |piece, j|
 
-        color = (i + j).even? ? :cyan : :yellow
+        color = (i + j).even? ? :yellow : :cyan
         if piece.nil?
           print '  '.colorize(:background => color)
         else
@@ -164,7 +164,22 @@ class Board
     self.game_space[piece.pos[0]][piece.pos[1]] = piece
   end
 
+  #assume move is valid / already checked
+  def move_piece(piece, new_pos)
+    self.game_space[piece.pos[0]][piece.pos[1]] = nil
+    piece.pos = new_pos
+    self.game_space[piece.pos[0]][piece.pos[1]] = piece
+  end
+
 end
 
 class InvalidMoveError < RuntimeError
 end
+
+
+
+
+
+
+
+
