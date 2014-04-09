@@ -1,6 +1,9 @@
+#!/usr/bin/env ruby
+
 require './board.rb'
 require './pieces.rb'
 require './humanplayer.rb'
+require 'colorize'
 
 class Game
   attr_accessor :board
@@ -12,26 +15,24 @@ class Game
   end
 
   def play
-    puts "\n\nWelcome to Chess - Enterprise Edition!! (with raving)"
+    system "clear"
+    puts "\n\nWelcome to Chess - Enterprise Edition!! (with raving)".colorize(:magenta)
     player = @b_player
     loop do
       player = @w_player == player ? @b_player : @w_player
 
-      p @board.valid_moves(player.color)
-
       break if over?(player.color)
 
-      p player.color
+      system "clear"
       @board.display
 
       begin
+        puts "It is #{player.color}'s turn: ".colorize(:magenta)
         new_move = player.get_move
         @board.move(new_move, player.color)
       rescue ArgumentError => e
-        puts e
-        retry
-      rescue InvalidMoveError => e
-        puts e
+        print "\n"
+        puts e.to_s.colorize(:red)
         retry
       end
     end
@@ -39,9 +40,9 @@ class Game
     @board.display
 
     if @board.checkmate?(player.color)
-      puts "Checkmate! #{player.color} lost. Let's go dance."
+      puts "Checkmate! #{player.color} lost. Let's go dance.".colorize(:magenta)
     else
-      puts "Stalemate! Let's go dance."
+      puts "Stalemate! Let's go dance.".colorize(:magenta)
     end
 
 
@@ -50,32 +51,8 @@ class Game
   def over?(color)
     @board.checkmate?(color) || @board.stalemate?(color)
   end
-
-
 end
 
-# YELLOW IS WHITE!!!
-
-g = Game.new
-# g.board.display
-# g.board.empty_board!
-# g.board.place_piece(King.new(:black, [0,0], g.board))
-# g.board.place_piece(King.new(:white, [4,4], g.board))
-# g.board.place_piece(Queen.new(:white, [1,2], g.board))
-# g.board.move_piece(g.board, g.board.game_space[0][0], [5,5])
-# g.board.display
-
-g.play
-
-
-
-
-
-
-
-
-
-
-
-
-
+if __FILE__ == $PROGRAM_NAME
+  Game.new.play
+end

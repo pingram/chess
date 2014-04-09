@@ -5,11 +5,11 @@ class HumanPlayer
   end
 
   def get_move
-    puts "Please enter your move:"
+    puts "Please enter your move:".colorize(:magenta)
     user_input = gets.chomp.downcase
 
     if user_input.length != 5
-      raise ArgumentError.new('Must be in format "e2 e4"')
+      raise ArgumentError.new('Must be in format "e2 e4"'.colorize(:magenta))
     end
 
     # TODO more validating user input
