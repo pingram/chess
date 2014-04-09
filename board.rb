@@ -157,6 +157,13 @@ class Board
       raise InvalidMoveError.new('Invalid move')
     end
   end
+
+  def place_piece(piece)
+    # self.game_space[piece.pos] = nil
+    # piece.pos = pos
+    self.game_space[piece.pos[0]][piece.pos[1]] = piece
+  end
+
 end
 
 class InvalidMoveError < RuntimeError

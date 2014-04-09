@@ -1,7 +1,10 @@
 require './board.rb'
 require './pieces.rb'
+require './humanplayer.rb'
 
 class Game
+  attr_accessor :board
+
   def initialize
     @board = Board.new
     @w_player = HumanPlayer.new(:white)
@@ -12,8 +15,12 @@ class Game
     puts "\n\nWelcome to Chess - Enterprise Edition!! (with raving)"
     player = @b_player
     loop do
-
       player = @w_player == player ? @b_player : @w_player
+
+      p @board.valid_moves(player.color)
+
+      break if over?(player.color)
+
       p player.color
       @board.display
 
@@ -27,59 +34,33 @@ class Game
         puts e
         retry
       end
-
-      # p new_move
-
-    end
-  end
-end
-
-class HumanPlayer
-  attr_reader :color
-  def initialize(color)
-    @color = color
-  end
-
-  def get_move
-    puts "Please enter your move:"
-    user_input = gets.chomp.downcase
-
-    if user_input.length != 5
-      raise ArgumentError.new('Must be in format "e2 e4"')
     end
 
-    # TODO more validating user input
-    move = user_input.split(' ')
+    @board.display
 
-    # reversing user input becuase of how 2d arrays work
-    from = move[0].reverse
-    to = move[1].reverse
+    if @board.checkmate?(player.color)
+      puts "Checkmate! #{player.color} lost. Let's go dance."
+    else
+      puts "Stalemate! Let's go dance."
+    end
 
-    player_map = { 'a' => 7,
-                   'b' => 6,
-                   'c' => 5,
-                   'd' => 4,
-                   'e' => 3,
-                   'f' => 2,
-                   'g' => 1,
-                   'h' => 0 }
 
-    from_x, from_y = from.split('')
-    to_x, to_y = to.split('')
-
-    new_from = [from_x.to_i - 1, player_map[from_y]]
-    new_to = [to_x.to_i - 1, player_map[to_y]]
-    # p [new_from, new_to]
-
-    [new_from, new_to]
   end
+
+  def over?(color)
+    @board.checkmate?(color) || @board.stalemate?(color)
+  end
+
+
 end
 
 
-g = Game.new
-g.play
-
-
+# g = Game.new
+# g.board.empty_board!
+# g.board.place_piece(King.new(:black, [0,0], g.board))
+# g.board.place_piece(King.new(:white, [4,4], g.board))
+# g.board.place_piece(Queen.new(:white, [1,2], g.board))
+# g.play
 
 
 
