@@ -36,7 +36,7 @@ class SlidingPieces < Piece
 
   def moves(move_dirs, pos)
 
-    valid_moves = []
+    all_moves = []
 
     move_dirs.each do |delta|
       new_x = pos[0] + delta[0]
@@ -45,23 +45,23 @@ class SlidingPieces < Piece
       next unless (new_x.between?(0, 7) && new_y.between?(0, 7))
 
       if board_space_empty?([new_x, new_y])
-        valid_moves += [[new_x, new_y]]
+        all_moves += [[new_x, new_y]]
 
-        valid_moves += moves([delta], [new_x, new_y])
+        all_moves += moves([delta], [new_x, new_y])
       end
 
       if opponent_piece?([new_x, new_y])
-        valid_moves << [new_x, new_y]
+        all_moves << [new_x, new_y]
       end
     end
 
-    valid_moves.uniq
+    all_moves.uniq
   end
 end
 
 class SteppingPieces < Piece
   def moves(move_dirs, pos)
-    valid_moves = []
+    all_moves = []
 
     move_dirs.each do |delta|
       new_x = pos[0] + delta[0]
@@ -70,11 +70,11 @@ class SteppingPieces < Piece
       next unless (new_x.between?(0, 7) && new_y.between?(0, 7))
 
       if board_space_empty?([new_x, new_y]) || opponent_piece?([new_x, new_y])
-        valid_moves += [[new_x, new_y]]
+        all_moves += [[new_x, new_y]]
       end
     end
 
-    valid_moves.uniq
+    all_moves.uniq
   end
 end
 
@@ -128,7 +128,7 @@ class Pawn < Piece
 
   def moves(move_dirs, pos)
     x, y = self.pos
-    valid_moves = []
+    all_moves = []
     if @color == :black
       delta = - 1
     else
@@ -139,21 +139,21 @@ class Pawn < Piece
 
     return [] unless ((new_x).between?(0, 7) && y.between?(0, 7))
 
-    valid_moves << [new_x, y] unless opponent_piece?([new_x, y])
+    all_moves << [new_x, y] unless opponent_piece?([new_x, y])
 
     unless has_moved?
-      valid_moves << [x + (delta * 2), y] unless opponent_piece?([x + (delta * 2), y])
+      all_moves << [x + (delta * 2), y] unless opponent_piece?([x + (delta * 2), y])
     end
 
 
     if (y + 1).between?(0,7) && opponent_piece?([new_x, y + 1])
-      valid_moves << [new_x, y + 1]
+      all_moves << [new_x, y + 1]
     end
     if (y - 1).between?(0,7) && opponent_piece?([new_x, y - 1])
-      valid_moves << [new_x, y - 1]
+      all_moves << [new_x, y - 1]
     end
 
-    valid_moves
+    all_moves
   end
 
   def has_moved?

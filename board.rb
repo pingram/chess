@@ -48,7 +48,7 @@ class Board
     @game_space.each_with_index do |row, i|
       row.each_with_index do |piece, j|
 
-        color = (i + j).even? ? :magenta : :cyan
+        color = (i + j).even? ? :light_white : :yellow
         if piece.nil?
           print '  '.colorize(:background => color)
         else
@@ -64,8 +64,7 @@ class Board
 
   def in_check?(king_object, game_space)
     # debugger
-    game_space.flatten.each do |piece|
-      next if piece.nil?
+    game_space.flatten.compact.each do |piece|
       next if king_object.color == piece.color
       return true if piece.moves(piece.move_dirs, piece.pos).any? { |move| king_object.pos == move }
     end
@@ -98,55 +97,98 @@ class Board
     new_board
   end
 
-  def move(start_pos, end_pos)
+  def valid_moves(player_color) # THIS IS THE COLOR THAT CORROSPONDS TO THE PLAYER WHO WILL MOVE
 
-    new_board = self.board_dup
-    x1, y1 = start_pos
-    x2, y2 = end_pos
-
-    player_color = new_board.game_space[x1][y1].color
-    p player_color
-    #p new_board.game_space[4][4].class
-    #+p new_board.game_space[5][5].class
-    new_board.game_space[x2][y2] = new_board.game_space[x1][y1]
-    new_board.game_space[x1][y1] = nil
+    valid_moves = []
 
 
+    @game_space.flatten.each do |piece|
+      next if piece.nil? || piece.color != player_color
+      piece.moves(piece.move_dirs, piece.pos).each do |piece_move|
 
-    king = new_board.game_space.flatten.select { |piece|
-      piece.class == King && piece.color == player_color }.first
+        new_board = self.board_dup
+        x1, y1 = piece.pos
+        x2, y2 = piece_move
 
+        new_board.game_space[x2][y2] = new_board.game_space[x1][y1]
+        new_board.game_space[x1][y1] = nil
 
-    new_board.game_space[x2][y2].pos = [x2, y2]
-    # p king
+        king = new_board.game_space.flatten.select do |piece|
+          piece.class == King && piece.color == player_color
+        end.first
 
-    p king.pos
+        new_board.game_space[x2][y2].pos = [x2, y2]
 
-    if in_check?(king, new_board.game_space)
-      raise 'This should put the players king in check'
+        unless in_check?(king, new_board.game_space)
+          valid_moves << [piece.pos, piece_move]
+        end
+
+      end
     end
 
-    self.game_space[x2][y2] = self.game_space[x1][y1]
-    self.game_space[x1][y1] = nil
+    valid_moves
   end
+
+  def checkmate?(player_color)
+    king = @game_space.flatten.select { |piece|
+      piece.class == King && piece.color == player_color }.first
+
+    valid_moves(player_color).empty? && in_check?(king, @game_space)
+  end
+
+  def stalemate?(player_color)
+    king = @game_space.flatten.select { |piece|
+      piece.class == King && piece.color == player_color }.first
+
+    valid_moves(player_color).empty? && !in_check?(king, @game_space)
+  end
+
+  # def move(start_pos, end_pos) # TODO
+#
+#     new_board = self.board_dup
+#     x1, y1 = start_pos
+#     x2, y2 = end_pos
+#
+#     # player_color = new_board.game_space[x1][y1].color
+#
+#     new_board.game_space[x2][y2] = new_board.game_space[x1][y1]
+#     new_board.game_space[x1][y1] = nil
+#
+#
+#
+#     king = new_board.game_space.flatten.select { |piece|
+#       piece.class == King && piece.color == player_color }.first
+#
+#
+#     new_board.game_space[x2][y2].pos = [x2, y2]
+#
+#
+#     if in_check?(king, new_board.game_space)
+#       raise 'This should put the players king in check'
+#     end
+#
+#     self.game_space[x2][y2] = self.game_space[x1][y1]
+#     self.game_space[x1][y1] = nil
+#   end
 end
 
 if __FILE__ == $PROGRAM_NAME
   b = Board.new
-  b.empty_board!
+  b.display
+  # b.empty_board!
   # bish = Bishop.new(:black, [4, 4], b)
   # b.game_space[4][4] = bish
   # p bish.moves(bish.move_dirs, bish.pos)
   #puts "Rook"
-  rook = Rook.new(:white, [5, 5], b)
-  b.game_space[5][5] = rook
-  # p rook.moves(rook.move_dirs, rook.pos)
-  #puts "KING"
-  rook = Rook.new(:black, [5, 6], b)
-  b.game_space[5][6] = rook
-
-  king = King.new(:black, [5, 7], b)
-  b.game_space[5][7] = king
+  # rook = Rook.new(:white, [5, 5], b)
+  # b.game_space[5][5] = rook
+  # # p rook.moves(rook.move_dirs, rook.pos)
+  # #puts "KING"
+  # rook = Rook.new(:black, [5, 6], b)
+  # b.game_space[5][6] = rook
+  #
+  # king = King.new(:black, [5, 7], b)
+  # b.game_space[5][7] = king
   # p king.moves(king.move_dirs, king.pos)
   # puts "Knight"
   # knight = Knight.new(:black, [5, 5], b)
@@ -159,13 +201,7 @@ if __FILE__ == $PROGRAM_NAME
  # b.display
   # b.game_space[6][4] = Rook.new(:white, [6,4], b)
   # p b.in_check?(b.game_space[7][4])
-
-  c = b.board_dup
-  # p b.game_space[4][4].class
-  # p b.game_space[5][5].class
-  # p c.game_space[4][4].class
-  # p c.game_space[5][5].class
-  b.move([5,6],[1,6])
+  p b.valid_moves(:black)
 
 
 
