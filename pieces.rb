@@ -44,8 +44,6 @@ class SlidingPieces < Piece
       new_x = pos[0] + delta[0]
       new_y = pos[1] + delta[1]
 
-
-
       next unless (new_x.between?(0, 7) && new_y.between?(0, 7))
 
       if board_space_empty?([new_x, new_y])

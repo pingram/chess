@@ -33,7 +33,6 @@ class HumanPlayer
 
     new_from = [from_x.to_i - 1, player_map[from_y]]
     new_to = [to_x.to_i - 1, player_map[to_y]]
-    # p [new_from, new_to]
 
     [new_from, new_to]
   end
@@ -42,13 +41,6 @@ class HumanPlayer
     begin
       puts 'Please promote your piece (R/N/B/Q)'
       gets.chomp.downcase
-
-
-
-
-
-
     end
   end
-
 end
