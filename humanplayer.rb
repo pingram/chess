@@ -39,8 +39,16 @@ class HumanPlayer
   end
 
   def promote
-    puts 'Please promote your piece (R/N/B/Q)'
-    gets.chomp.downcase # TODO handle error checking
+    begin
+      puts 'Please promote your piece (R/N/B/Q)'
+      gets.chomp.downcase
+
+
+
+
+
+
+    end
   end
 
 end

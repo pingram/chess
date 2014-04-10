@@ -1,3 +1,5 @@
+require 'debugger'
+
 class Board
   attr_accessor :game_space
 
@@ -53,7 +55,7 @@ class Board
     new_board.empty_board!
 
     @game_space.flatten.compact.each do |piece|
-      c, p, b = piece.color, piece.pos.dup, piece.board
+      c, p, b = piece.color, piece.pos.dup, new_board
       place_piece(new_board, piece.class.new(c, p, b))
     end
 
@@ -71,6 +73,8 @@ class Board
         x1, y1 = piece.pos
         x2, y2 = piece_move
 
+        target_piece = new_board.game_space[x2][y2]
+
         new_board.game_space[x2][y2] = new_board.game_space[x1][y1]
         new_board.game_space[x1][y1] = nil
 
@@ -81,7 +85,6 @@ class Board
         end
       end
     end
-
     valid_moves
   end
 

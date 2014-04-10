@@ -54,9 +54,9 @@ class Game
     @board.display
 
     if @board.checkmate?(player.color)
-      puts "Checkmate! #{player.color} lost. Let's go dance.".colorize(:magenta)
+      puts "\n\nCheckmate! #{player.color} lost. Let's go dance.\n".colorize(:magenta)
     else
-      puts "Stalemate! Let's go dance.".colorize(:magenta)
+      puts "\n\nStalemate! Let's go dance.\n".colorize(:magenta)
     end
 
 
@@ -70,9 +70,9 @@ end
 if __FILE__ == $PROGRAM_NAME
   a = Game.new
   a.board.empty_board!
-  a.board.place_piece(a.board, King.new(:white, [5,5], a.board))
-  a.board.place_piece(a.board, King.new(:black, [4,3], a.board))
-  a.board.place_piece(a.board, Pawn.new(:white, [6,6], a.board))
+  a.board.place_piece(a.board, King.new(:white, [6,5], a.board))
+  a.board.place_piece(a.board, King.new(:black, [7,7], a.board))
+  a.board.place_piece(a.board, Queen.new(:white, [0,6], a.board))
   a.play
 
 
